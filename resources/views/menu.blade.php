@@ -80,7 +80,11 @@
             @endif
 
             <div class="content">
-                <div id="menu" data-pizzas={{ base64_encode(json_encode($pizzas)) }}></div>
+                <div
+                    id="menu"
+                    data-pizzas="{{ base64_encode(json_encode($pizzas)) }}"
+                    data-currency-rate="{{ $currencyRate }}"
+                ></div>
             </div>
         </div>
         <script src="/js/app.js"></script>

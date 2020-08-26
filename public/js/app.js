@@ -65862,6 +65862,31 @@ var CartButton = function CartButton(props) {
 
 /***/ }),
 
+/***/ "./resources/js/components/Currency.js":
+/*!*********************************************!*\
+  !*** ./resources/js/components/Currency.js ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+var Currency = function Currency(_ref) {
+  var currency = _ref.currency,
+      switchCurrency = _ref.switchCurrency;
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Currency:", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    onClick: switchCurrency
+  }, currency));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Currency);
+
+/***/ }),
+
 /***/ "./resources/js/components/Menu.js":
 /*!*****************************************!*\
   !*** ./resources/js/components/Menu.js ***!
@@ -65878,6 +65903,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Pizza__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Pizza */ "./resources/js/components/Pizza.js");
 /* harmony import */ var _CartButton__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CartButton */ "./resources/js/components/CartButton.js");
 /* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../reducer */ "./resources/js/reducer.js");
+/* harmony import */ var _Currency__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Currency */ "./resources/js/components/Currency.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -65896,6 +65922,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var Menu = function Menu(props) {
   var _React$useReducer = react__WEBPACK_IMPORTED_MODULE_0___default.a.useReducer(_reducer__WEBPACK_IMPORTED_MODULE_4__["reducer"], _reducer__WEBPACK_IMPORTED_MODULE_4__["initialState"]),
       _React$useReducer2 = _slicedToArray(_React$useReducer, 2),
@@ -65904,6 +65931,13 @@ var Menu = function Menu(props) {
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CartButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
     count: state.cart.length
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Currency__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    currency: state.currency,
+    switchCurrency: function switchCurrency() {
+      return dispatch({
+        type: "switchCurrency"
+      });
+    }
   }), props.pizzas.map(function (_ref) {
     var id = _ref.id,
         price = _ref.price,
@@ -65913,12 +65947,12 @@ var Menu = function Menu(props) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pizza__WEBPACK_IMPORTED_MODULE_2__["default"], {
       name: name,
       key: id,
-      price: price,
+      price: state.currency === "EUR" ? price : Math.ceil(price * props.currencyRate * 100) / 100,
       description: description,
       image: image,
       addToCart: function addToCart() {
         return dispatch({
-          type: "add",
+          type: "addToCart",
           id: id
         });
       }
@@ -65930,9 +65964,12 @@ var Menu = function Menu(props) {
 
 if (document.getElementById("menu")) {
   var menu = document.getElementById("menu");
-  var pizzas = menu.dataset.pizzas;
+  var _menu$dataset = menu.dataset,
+      pizzas = _menu$dataset.pizzas,
+      currencyRate = _menu$dataset.currencyRate;
   react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Menu, {
-    pizzas: JSON.parse(atob(pizzas))
+    pizzas: JSON.parse(atob(pizzas)),
+    currencyRate: parseFloat(currencyRate)
   }), menu);
 }
 
@@ -65971,7 +66008,7 @@ var Pizza = function Pizza(props) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "initialState", function() { return initialState; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reducer", function() { return reducer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reducer", function() { return localStorageReducer; });
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -65984,24 +66021,39 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-var initialState = {
-  cart: JSON.parse(localStorage.getItem("cart")) || []
+var initialState = JSON.parse(localStorage.getItem("state")) || {
+  cart: [],
+  currency: "EUR"
 };
 
 var reducer = function reducer(state, action) {
   switch (action.type) {
-    case "add":
+    case "addToCart":
       var cart = [].concat(_toConsumableArray(state.cart), [action.id]);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      return {
+      return Object.assign({}, state, {
         cart: cart
-      };
+      });
+
+    case "switchCurrency":
+      var currency = state.currency === "EUR" ? "USD" : "EUR";
+      return Object.assign({}, state, {
+        currency: currency
+      });
 
     default:
       throw new Error();
   }
 };
 
+var saveInLocalStorage = function saveInLocalStorage(reducer) {
+  return function (state, action) {
+    var newState = reducer(state, action);
+    localStorage.setItem("state", JSON.stringify(newState));
+    return newState;
+  };
+};
+
+var localStorageReducer = saveInLocalStorage(reducer);
 
 
 /***/ }),

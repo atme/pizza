@@ -14,6 +14,9 @@ class MenuController extends Controller
      */
     public function index()
     {
-        return view('menu', ['pizzas' => Pizza::all()]);
+        return view('menu', [
+            'pizzas' => Pizza::all(),
+            'currencyRate' => 1.18,
+        ]);
     }
 }
