@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', 'MenuController@index');
+Route::get('/cart', 'CartController@index');
 
 Auth::routes();
 

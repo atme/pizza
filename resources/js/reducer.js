@@ -6,8 +6,15 @@ const initialState = JSON.parse(localStorage.getItem("state")) || {
 const reducer = (state, action) => {
     switch (action.type) {
         case "addToCart":
-            const cart = [...state.cart, action.id];
-            return Object.assign({}, state, { cart });
+            return Object.assign({}, state, {
+                cart: [...state.cart, action.id]
+            });
+        case "removeFromCart":
+            return Object.assign({}, state, {
+                cart: state.cart
+                    .slice(0, action.index)
+                    .concat(state.cart.slice(action.index + 1))
+            });
         case "switchCurrency":
             const currency = state.currency === "EUR" ? "USD" : "EUR";
             return Object.assign({}, state, { currency });
@@ -17,10 +24,10 @@ const reducer = (state, action) => {
 };
 
 const saveInLocalStorage = reducer => (state, action) => {
-    const newState = reducer(state,action);
+    const newState = reducer(state, action);
     localStorage.setItem("state", JSON.stringify(newState));
     return newState;
-}
+};
 
 const localStorageReducer = saveInLocalStorage(reducer);
 

@@ -4,9 +4,14 @@ import Pizza from "./Pizza";
 import CartButton from "./CartButton";
 import { reducer, initialState } from "./../reducer";
 import Currency from "./Currency";
+import Utils from "./../utils";
 
 const Menu = props => {
     const [state, dispatch] = React.useReducer(reducer, initialState);
+    const convertCurrency = Utils.currencyConverter(
+        state.currency,
+        props.currencyRate
+    );
     return (
         <>
             <CartButton count={state.cart.length} />
@@ -18,11 +23,7 @@ const Menu = props => {
                 <Pizza
                     name={name}
                     key={id}
-                    price={
-                        state.currency === "EUR"
-                            ? price
-                            : Math.ceil(price * props.currencyRate * 100) / 100
-                    }
+                    price={convertCurrency(price)}
                     description={description}
                     image={image}
                     addToCart={() => dispatch({ type: "addToCart", id })}

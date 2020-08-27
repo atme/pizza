@@ -1,5 +1,9 @@
 import React from "react";
 
-const CartButton = props => <div>Cart: {props.count}</div>;
+const CartButton = props => (
+    <div>
+        <a href="/cart">Cart: {props.count}</a>
+    </div>
+);
 
 export default CartButton;

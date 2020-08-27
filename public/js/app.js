@@ -65794,6 +65794,8 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 __webpack_require__(/*! ./components/Menu */ "./resources/js/components/Menu.js");
 
+__webpack_require__(/*! ./components/Cart */ "./resources/js/components/Cart.js");
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":
@@ -65841,6 +65843,108 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
+/***/ "./resources/js/components/Cart.js":
+/*!*****************************************!*\
+  !*** ./resources/js/components/Cart.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _Pizza__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Pizza */ "./resources/js/components/Pizza.js");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../reducer */ "./resources/js/reducer.js");
+/* harmony import */ var _Currency__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Currency */ "./resources/js/components/Currency.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../utils */ "./resources/js/utils.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+
+var Cart = function Cart(props) {
+  var _React$useReducer = react__WEBPACK_IMPORTED_MODULE_0___default.a.useReducer(_reducer__WEBPACK_IMPORTED_MODULE_3__["reducer"], _reducer__WEBPACK_IMPORTED_MODULE_3__["initialState"]),
+      _React$useReducer2 = _slicedToArray(_React$useReducer, 2),
+      state = _React$useReducer2[0],
+      dispatch = _React$useReducer2[1];
+
+  var convertCurrency = _utils__WEBPACK_IMPORTED_MODULE_5__["default"].currencyConverter(state.currency, props.currencyRate);
+  var cart = state.cart.map(function (id) {
+    return props.pizzas.find(function (pizza) {
+      return pizza.id === id;
+    });
+  }).map(function (pizza) {
+    return Object.assign({}, pizza, {
+      price: convertCurrency(pizza.price)
+    });
+  });
+  var deliveryCost = convertCurrency(props.deliveryCost);
+  var totalPrice = (cart.reduce(function (totalPrice, _ref) {
+    var price = _ref.price;
+    return totalPrice + price;
+  }, 0) + deliveryCost).toFixed(2);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Currency__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    currency: state.currency,
+    switchCurrency: function switchCurrency() {
+      return dispatch({
+        type: "switchCurrency"
+      });
+    }
+  }), cart.map(function (_ref2, index) {
+    var price = _ref2.price,
+        name = _ref2.name,
+        description = _ref2.description,
+        image = _ref2.image;
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pizza__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      name: name,
+      key: index,
+      price: price,
+      description: description,
+      image: image,
+      addToCart: function addToCart() {
+        return dispatch({
+          type: "removeFromCart",
+          index: index
+        });
+      }
+    });
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Delivery cost: ", deliveryCost), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Total price: ", totalPrice));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Cart);
+
+if (document.getElementById("cart")) {
+  var cart = document.getElementById("cart");
+  var _cart$dataset = cart.dataset,
+      pizzas = _cart$dataset.pizzas,
+      currencyRate = _cart$dataset.currencyRate,
+      deliveryCost = _cart$dataset.deliveryCost;
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Cart, {
+    pizzas: JSON.parse(atob(pizzas)),
+    currencyRate: parseFloat(currencyRate),
+    deliveryCost: parseFloat(deliveryCost)
+  }), cart);
+}
+
+/***/ }),
+
 /***/ "./resources/js/components/CartButton.js":
 /*!***********************************************!*\
   !*** ./resources/js/components/CartButton.js ***!
@@ -65855,7 +65959,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var CartButton = function CartButton(props) {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Cart: ", props.count);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+    href: "/cart"
+  }, "Cart: ", props.count));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (CartButton);
@@ -65904,6 +66010,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _CartButton__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CartButton */ "./resources/js/components/CartButton.js");
 /* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../reducer */ "./resources/js/reducer.js");
 /* harmony import */ var _Currency__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Currency */ "./resources/js/components/Currency.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./../utils */ "./resources/js/utils.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -65923,12 +66030,14 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 var Menu = function Menu(props) {
   var _React$useReducer = react__WEBPACK_IMPORTED_MODULE_0___default.a.useReducer(_reducer__WEBPACK_IMPORTED_MODULE_4__["reducer"], _reducer__WEBPACK_IMPORTED_MODULE_4__["initialState"]),
       _React$useReducer2 = _slicedToArray(_React$useReducer, 2),
       state = _React$useReducer2[0],
       dispatch = _React$useReducer2[1];
 
+  var convertCurrency = _utils__WEBPACK_IMPORTED_MODULE_6__["default"].currencyConverter(state.currency, props.currencyRate);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CartButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
     count: state.cart.length
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Currency__WEBPACK_IMPORTED_MODULE_5__["default"], {
@@ -65947,7 +66056,7 @@ var Menu = function Menu(props) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pizza__WEBPACK_IMPORTED_MODULE_2__["default"], {
       name: name,
       key: id,
-      price: state.currency === "EUR" ? price : Math.ceil(price * props.currencyRate * 100) / 100,
+      price: convertCurrency(price),
       description: description,
       image: image,
       addToCart: function addToCart() {
@@ -66029,9 +66138,13 @@ var initialState = JSON.parse(localStorage.getItem("state")) || {
 var reducer = function reducer(state, action) {
   switch (action.type) {
     case "addToCart":
-      var cart = [].concat(_toConsumableArray(state.cart), [action.id]);
       return Object.assign({}, state, {
-        cart: cart
+        cart: [].concat(_toConsumableArray(state.cart), [action.id])
+      });
+
+    case "removeFromCart":
+      return Object.assign({}, state, {
+        cart: state.cart.slice(0, action.index).concat(state.cart.slice(action.index + 1))
       });
 
     case "switchCurrency":
@@ -66055,6 +66168,27 @@ var saveInLocalStorage = function saveInLocalStorage(reducer) {
 
 var localStorageReducer = saveInLocalStorage(reducer);
 
+
+/***/ }),
+
+/***/ "./resources/js/utils.js":
+/*!*******************************!*\
+  !*** ./resources/js/utils.js ***!
+  \*******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var currencyConverter = function currencyConverter(currency, rate) {
+  return function (price) {
+    return currency === "EUR" ? price : Math.ceil(price * rate * 100) / 100;
+  };
+};
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  currencyConverter: currencyConverter
+});
 
 /***/ }),
 
