@@ -2,9 +2,9 @@
 
 @section('content')
 <div
-    id="cart" 
-    data-pizzas="{{ base64_encode($pizzas->toJson()) }}"
+    id="order" 
     data-currency-rate="{{ $currencyRate }}"
     data-delivery-cost="{{ $deliveryCost }}"
+    data-orders="{{ base64_encode($orders->toJson()) }}"
 ></div>
 @endsection

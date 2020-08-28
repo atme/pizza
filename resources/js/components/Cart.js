@@ -4,6 +4,7 @@ import Pizza from "./Pizza";
 import { reducer, initialState } from "./../reducer";
 import Currency from "./Currency";
 import Utils from "./../utils";
+import Axios from "axios";
 
 const Cart = props => {
     const [state, dispatch] = React.useReducer(reducer, initialState);
@@ -21,6 +22,10 @@ const Cart = props => {
         cart.reduce((totalPrice, { price }) => totalPrice + price, 0) +
         deliveryCost
     ).toFixed(2);
+
+    const order = () => {
+        Axios.post("/order", { cart: state.cart });
+    };
     return (
         <>
             <Currency
@@ -41,6 +46,9 @@ const Cart = props => {
             ))}
             <div>Delivery cost: {deliveryCost}</div>
             <div>Total price: {totalPrice}</div>
+            <div>
+                <button onClick={order}>Order</button>
+            </div>
         </>
     );
 };

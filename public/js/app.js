@@ -65796,6 +65796,8 @@ __webpack_require__(/*! ./components/Menu */ "./resources/js/components/Menu.js"
 
 __webpack_require__(/*! ./components/Cart */ "./resources/js/components/Cart.js");
 
+__webpack_require__(/*! ./components/Order */ "./resources/js/components/Order.js");
+
 /***/ }),
 
 /***/ "./resources/js/bootstrap.js":
@@ -65860,6 +65862,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../reducer */ "./resources/js/reducer.js");
 /* harmony import */ var _Currency__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Currency */ "./resources/js/components/Currency.js");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../utils */ "./resources/js/utils.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_6__);
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -65871,6 +65875,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 
 
 
@@ -65900,6 +65905,13 @@ var Cart = function Cart(props) {
     var price = _ref.price;
     return totalPrice + price;
   }, 0) + deliveryCost).toFixed(2);
+
+  var order = function order() {
+    axios__WEBPACK_IMPORTED_MODULE_6___default.a.post("/order", {
+      cart: state.cart
+    });
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Currency__WEBPACK_IMPORTED_MODULE_4__["default"], {
     currency: state.currency,
     switchCurrency: function switchCurrency() {
@@ -65925,7 +65937,9 @@ var Cart = function Cart(props) {
         });
       }
     });
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Delivery cost: ", deliveryCost), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Total price: ", totalPrice));
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Delivery cost: ", deliveryCost), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Total price: ", totalPrice), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    onClick: order
+  }, "Order")));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Cart);
@@ -66080,6 +66094,119 @@ if (document.getElementById("menu")) {
     pizzas: JSON.parse(atob(pizzas)),
     currencyRate: parseFloat(currencyRate)
   }), menu);
+}
+
+/***/ }),
+
+/***/ "./resources/js/components/Order.js":
+/*!******************************************!*\
+  !*** ./resources/js/components/Order.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _Pizza__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Pizza */ "./resources/js/components/Pizza.js");
+/* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../reducer */ "./resources/js/reducer.js");
+/* harmony import */ var _Currency__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Currency */ "./resources/js/components/Currency.js");
+/* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../utils */ "./resources/js/utils.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+
+
+
+var OrderList = function OrderList(props) {
+  var _React$useReducer = react__WEBPACK_IMPORTED_MODULE_0___default.a.useReducer(_reducer__WEBPACK_IMPORTED_MODULE_3__["reducer"], _reducer__WEBPACK_IMPORTED_MODULE_3__["initialState"]),
+      _React$useReducer2 = _slicedToArray(_React$useReducer, 2),
+      state = _React$useReducer2[0],
+      dispatch = _React$useReducer2[1];
+
+  var convertCurrency = _utils__WEBPACK_IMPORTED_MODULE_5__["default"].currencyConverter(state.currency, props.currencyRate);
+  var orders = props.orders.map(function (order) {
+    return Object.assign({}, order, {
+      pizzas: order.pizzas.map(function (pizza) {
+        return Object.assign({}, pizza, {
+          price: convertCurrency(pizza.price)
+        });
+      })
+    });
+  });
+  var deliveryCost = convertCurrency(props.deliveryCost);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Currency__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    currency: state.currency,
+    switchCurrency: function switchCurrency() {
+      return dispatch({
+        type: "switchCurrency"
+      });
+    }
+  }), orders.map(function (order) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Order, {
+      order: order,
+      deliveryCost: deliveryCost,
+      key: order.id
+    });
+  }));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (OrderList);
+
+var Order = function Order(props) {
+  var totalPrice = (props.order.pizzas.reduce(function (totalPrice, _ref) {
+    var price = _ref.price;
+    return totalPrice + price;
+  }, 0) + props.deliveryCost).toFixed(2);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, props.order.pizzas.map(function (_ref2) {
+    var price = _ref2.price,
+        name = _ref2.name,
+        description = _ref2.description,
+        image = _ref2.image,
+        id = _ref2.id;
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pizza__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      name: name,
+      key: id,
+      price: price,
+      description: description,
+      image: image,
+      addToCart: function addToCart() {
+        return dispatch({
+          type: "removeFromCart",
+          id: id
+        });
+      }
+    });
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Delivery cost: ", props.deliveryCost), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Total price: ", totalPrice));
+};
+
+if (document.getElementById("order")) {
+  var order = document.getElementById("order");
+  var _order$dataset = order.dataset,
+      orders = _order$dataset.orders,
+      currencyRate = _order$dataset.currencyRate,
+      deliveryCost = _order$dataset.deliveryCost;
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(OrderList, {
+    orders: JSON.parse(atob(orders)),
+    currencyRate: parseFloat(currencyRate),
+    deliveryCost: parseFloat(deliveryCost)
+  }), order);
 }
 
 /***/ }),

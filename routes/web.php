@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'MenuController@index');
 Route::get('/cart', 'CartController@index');
+Route::get('/order', 'OrderController@index')->middleware('auth');
+Route::post('/order', 'OrderController@store');
 
 Auth::routes();
 

@@ -82,7 +82,7 @@
             <div class="content">
                 <div
                     id="menu"
-                    data-pizzas="{{ base64_encode(json_encode($pizzas)) }}"
+                    data-pizzas="{{ base64_encode($pizzas->toJson()) }}"
                     data-currency-rate="{{ $currencyRate }}"
                 ></div>
             </div>
