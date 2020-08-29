@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+use App\Pizza;
 
 class OrderController extends Controller
 {
@@ -29,6 +31,12 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
+        $pizzaIds = Pizza::get(["id"])->pluck('id');
+        $request->validate([
+            "cart" => ["required", "array", "min:1"],
+            "cart.*" => ["integer", Rule::in($pizzaIds)]
+        ]);
+
         if (Auth::check()) {
             Auth::user()
                 ->orders()
