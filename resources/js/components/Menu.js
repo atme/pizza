@@ -27,10 +27,9 @@ const Menu = props => {
                 <div className="row row-cols-1 row-cols-md-4">
                     {props.pizzas.map(
                         ({ id, price, name, description, image }) => (
-                            <div className="col mb-4">
+                            <div className="col mb-4" key={id}>
                                 <PizzaMenu
                                     name={name}
-                                    key={id}
                                     price={
                                         convertCurrency(price).toString() +
                                         state.currency
