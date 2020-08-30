@@ -65858,7 +65858,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _Pizza__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Pizza */ "./resources/js/components/Pizza.js");
+/* harmony import */ var _PizzaCart__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PizzaCart */ "./resources/js/components/PizzaCart.js");
 /* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../reducer */ "./resources/js/reducer.js");
 /* harmony import */ var _Currency__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Currency */ "./resources/js/components/Currency.js");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../utils */ "./resources/js/utils.js");
@@ -65890,6 +65890,21 @@ var Cart = function Cart(props) {
       state = _React$useReducer2[0],
       dispatch = _React$useReducer2[1];
 
+  var _React$useState = react__WEBPACK_IMPORTED_MODULE_0___default.a.useState(props.userName),
+      _React$useState2 = _slicedToArray(_React$useState, 2),
+      name = _React$useState2[0],
+      setName = _React$useState2[1];
+
+  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_0___default.a.useState(""),
+      _React$useState4 = _slicedToArray(_React$useState3, 2),
+      address = _React$useState4[0],
+      setAddress = _React$useState4[1];
+
+  var _React$useState5 = react__WEBPACK_IMPORTED_MODULE_0___default.a.useState(false),
+      _React$useState6 = _slicedToArray(_React$useState5, 2),
+      ordered = _React$useState6[0],
+      setOrdered = _React$useState6[1];
+
   var convertCurrency = _utils__WEBPACK_IMPORTED_MODULE_5__["default"].currencyConverter(state.currency, props.currencyRate);
   var cart = state.cart.map(function (id) {
     return props.pizzas.find(function (pizza) {
@@ -65900,46 +65915,155 @@ var Cart = function Cart(props) {
       price: convertCurrency(pizza.price)
     });
   });
-  var deliveryCost = convertCurrency(props.deliveryCost);
-  var totalPrice = (cart.reduce(function (totalPrice, _ref) {
+  var subtotalPrice = cart.reduce(function (totalPrice, _ref) {
     var price = _ref.price;
-    return totalPrice + price;
-  }, 0) + deliveryCost).toFixed(2);
+    return totalPrice + price * 100;
+  }, 0) / 100;
+  var deliveryCost = convertCurrency(props.deliveryCost);
+  var totalPrice = subtotalPrice + deliveryCost;
 
-  var order = function order() {
+  var handleSubmit = function handleSubmit(e) {
+    e.preventDefault();
+    setOrdered(true);
+    dispatch({
+      type: "cleanCart"
+    });
     axios__WEBPACK_IMPORTED_MODULE_6___default.a.post("/order", {
-      cart: state.cart
+      cart: state.cart,
+      name: name,
+      address: address
     });
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Currency__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  if (ordered) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "container"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Order is completed. Wait for delivery :)"));
+  }
+
+  if (state.cart.length === 0) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      className: "container"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Cart is empty"));
+  }
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "container"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
+    className: "navbar navbar-light bg-light"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Currency__WEBPACK_IMPORTED_MODULE_4__["default"], {
     currency: state.currency,
     switchCurrency: function switchCurrency() {
       return dispatch({
         type: "switchCurrency"
       });
     }
-  }), cart.map(function (_ref2, index) {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(CartTable, null, cart.map(function (_ref2, index) {
     var price = _ref2.price,
         name = _ref2.name,
         description = _ref2.description,
         image = _ref2.image;
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pizza__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_PizzaCart__WEBPACK_IMPORTED_MODULE_2__["default"], {
       name: name,
       key: index,
-      price: price,
+      price: price + state.currency,
       description: description,
       image: image,
-      addToCart: function addToCart() {
+      removeFromCart: function removeFromCart() {
         return dispatch({
           type: "removeFromCart",
           index: index
         });
       }
     });
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Delivery cost: ", deliveryCost), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Total price: ", totalPrice), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    onClick: order
-  }, "Order")));
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+    className: "row py-5 p-4 bg-white rounded shadow-sm",
+    onSubmit: handleSubmit
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "col-lg-6"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "bg-light px-4 py-3 text-uppercase font-weight-bold"
+  }, "Instructions for seller"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "p-4"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: "name"
+  }, "Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    type: "text",
+    className: "form-control",
+    id: "name",
+    value: name,
+    onChange: function onChange(_ref3) {
+      var target = _ref3.target;
+      return setName(target.value);
+    },
+    disabled: props.userName.length > 0,
+    required: true
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    htmlFor: "address"
+  }, "Address"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("textarea", {
+    className: "form-control",
+    id: "address",
+    rows: "2",
+    onChange: function onChange(_ref4) {
+      var target = _ref4.target;
+      return setAddress(target.value);
+    },
+    required: true,
+    value: address
+  })))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "col-lg-6"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "bg-light px-4 py-3 text-uppercase font-weight-bold"
+  }, "Order summary"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "p-4"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+    className: "list-unstyled mb-4"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+    className: "d-flex justify-content-between py-3 border-bottom"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", {
+    className: "text-muted"
+  }, "Order Subtotal"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, subtotalPrice + state.currency)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+    className: "d-flex justify-content-between py-3 border-bottom"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", {
+    className: "text-muted"
+  }, "Delivery cost:"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, deliveryCost + state.currency)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+    className: "d-flex justify-content-between py-3 border-bottom"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", {
+    className: "text-muted"
+  }, "Total"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
+    className: "font-weight-bold"
+  }, totalPrice.toFixed(2) + state.currency))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "btn btn-lg btn-block btn-primary"
+  }, "Order")))));
+};
+
+var CartTable = function CartTable(props) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "row"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "col-lg-12 p-5 bg-white rounded shadow-sm mb-5"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "table-responsive"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+    className: "table"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+    scope: "col",
+    className: "border-0 bg-light"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "p-2 px-3 text-uppercase"
+  }, "Pizza")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+    scope: "col",
+    className: "border-0 bg-light"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "py-2 text-uppercase"
+  }, "Price")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+    scope: "col",
+    className: "border-0 bg-light"
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, props.children)))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Cart);
@@ -65949,11 +66073,13 @@ if (document.getElementById("cart")) {
   var _cart$dataset = cart.dataset,
       pizzas = _cart$dataset.pizzas,
       currencyRate = _cart$dataset.currencyRate,
-      deliveryCost = _cart$dataset.deliveryCost;
+      deliveryCost = _cart$dataset.deliveryCost,
+      userName = _cart$dataset.userName;
   react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Cart, {
     pizzas: JSON.parse(atob(pizzas)),
     currencyRate: parseFloat(currencyRate),
-    deliveryCost: parseFloat(deliveryCost)
+    deliveryCost: parseFloat(deliveryCost),
+    userName: atob(userName)
   }), cart);
 }
 
@@ -66011,16 +66137,16 @@ var Currency = function Currency(_ref) {
   var currency = _ref.currency,
       switchCurrency = _ref.switchCurrency;
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    "class": "custom-control custom-switch"
+    className: "custom-control custom-switch"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     type: "checkbox",
-    "class": "custom-control-input",
+    className: "custom-control-input",
     id: "currency",
     onClick: switchCurrency,
-    checked: currency === "$"
+    defaultChecked: currency === "$"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    "class": "custom-control-label",
-    "for": "currency"
+    className: "custom-control-label",
+    htmlFor: "currency"
   }, "USD"));
 };
 
@@ -66041,7 +66167,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _Pizza__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Pizza */ "./resources/js/components/Pizza.js");
+/* harmony import */ var _PizzaMenu__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PizzaMenu */ "./resources/js/components/PizzaMenu.js");
 /* harmony import */ var _CartButton__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./CartButton */ "./resources/js/components/CartButton.js");
 /* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./../reducer */ "./resources/js/reducer.js");
 /* harmony import */ var _Currency__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Currency */ "./resources/js/components/Currency.js");
@@ -66074,9 +66200,9 @@ var Menu = function Menu(props) {
 
   var convertCurrency = _utils__WEBPACK_IMPORTED_MODULE_6__["default"].currencyConverter(state.currency, props.currencyRate);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    "class": "container"
+    className: "container"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
-    "class": "navbar navbar-light bg-light"
+    className: "navbar navbar-light bg-light"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Currency__WEBPACK_IMPORTED_MODULE_5__["default"], {
     currency: state.currency,
     switchCurrency: function switchCurrency() {
@@ -66087,7 +66213,7 @@ var Menu = function Menu(props) {
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CartButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
     count: state.cart.length
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    "class": "row row-cols-1 row-cols-md-4"
+    className: "row row-cols-1 row-cols-md-4"
   }, props.pizzas.map(function (_ref) {
     var id = _ref.id,
         price = _ref.price,
@@ -66095,8 +66221,8 @@ var Menu = function Menu(props) {
         description = _ref.description,
         image = _ref.image;
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-      "class": "col mb-4"
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pizza__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      className: "col mb-4"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_PizzaMenu__WEBPACK_IMPORTED_MODULE_2__["default"], {
       name: name,
       key: id,
       price: convertCurrency(price).toString() + state.currency,
@@ -66265,7 +66391,7 @@ var Pizza = function Pizza(props) {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
     className: "card-title"
   }, props.name, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    "class": "badge badge-secondary"
+    className: "badge badge-secondary"
   }, props.price)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
     className: "card-text"
   }, props.description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -66277,6 +66403,88 @@ var Pizza = function Pizza(props) {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Pizza);
+
+/***/ }),
+
+/***/ "./resources/js/components/PizzaCart.js":
+/*!**********************************************!*\
+  !*** ./resources/js/components/PizzaCart.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+var PizzaCart = function PizzaCart(props) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
+    scope: "row",
+    className: "border-0"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "p-2"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+    src: props.image,
+    alt: props.name,
+    width: "70",
+    className: "img-fluid rounded shadow-sm"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "ml-3 d-inline-block align-middle"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
+    className: "mb-0"
+  }, props.name)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+    className: "border-0 align-middle"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, props.price)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+    className: "border-0 align-middle"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    onClick: props.removeFromCart,
+    className: "btn btn-lg btn-block btn-danger"
+  }, "Remove from cart")));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (PizzaCart);
+
+/***/ }),
+
+/***/ "./resources/js/components/PizzaMenu.js":
+/*!**********************************************!*\
+  !*** ./resources/js/components/PizzaMenu.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+var PizzaMenu = function PizzaMenu(props) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card h-100"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+    src: props.image,
+    className: "card-img-top",
+    alt: props.name
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card-body"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
+    className: "card-title"
+  }, props.name, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    className: "badge badge-secondary"
+  }, props.price)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+    className: "card-text"
+  }, props.description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card-footer"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    onClick: props.addToCart,
+    className: "btn btn-lg btn-block btn-primary"
+  }, "Add to cart")));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (PizzaMenu);
 
 /***/ }),
 
@@ -66318,6 +66526,11 @@ var reducer = function reducer(state, action) {
     case "removeFromCart":
       return Object.assign({}, state, {
         cart: state.cart.slice(0, action.index).concat(state.cart.slice(action.index + 1))
+      });
+
+    case "cleanCart":
+      return Object.assign({}, state, {
+        cart: []
       });
 
     case "switchCurrency":

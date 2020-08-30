@@ -1,15 +1,15 @@
 import React from "react";
 
 const Currency = ({ currency, switchCurrency }) => (
-    <div class="custom-control custom-switch">
+    <div className="custom-control custom-switch">
         <input
             type="checkbox"
-            class="custom-control-input"
+            className="custom-control-input"
             id="currency"
             onClick={switchCurrency}
-            checked={currency === "$"}
+            defaultChecked={currency === "$"}
         />
-        <label class="custom-control-label" for="currency">
+        <label className="custom-control-label" htmlFor="currency">
             USD
         </label>
     </div>

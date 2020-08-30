@@ -1,6 +1,6 @@
 import React from "react";
 
-const Pizza = props => (
+const PizzaMenu = props => (
     <div className="card h-100">
         <img src={props.image} className="card-img-top" alt={props.name} />
         <div className="card-body">
@@ -22,4 +22,4 @@ const Pizza = props => (
     </div>
 );
 
-export default Pizza;
+export default PizzaMenu;

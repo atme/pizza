@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Pizza;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -18,6 +19,7 @@ class CartController extends Controller
             'pizzas' => Pizza::all(),
             'currencyRate' => 1.18,
             'deliveryCost' => 5,
+            'userName' => Auth::check() ? Auth::user()->name : '',
         ]);
     }
 }

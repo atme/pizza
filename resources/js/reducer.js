@@ -15,6 +15,10 @@ const reducer = (state, action) => {
                     .slice(0, action.index)
                     .concat(state.cart.slice(action.index + 1))
             });
+        case "cleanCart":
+            return Object.assign({}, state, {
+                cart: []
+            });
         case "switchCurrency":
             const currency = state.currency === "€" ? "$" : "€";
             return Object.assign({}, state, { currency });

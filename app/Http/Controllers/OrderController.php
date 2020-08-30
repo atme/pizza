@@ -31,19 +31,21 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        $pizzaIds = Pizza::get(["id"])->pluck('id');
+        $pizzaIds = Pizza::get(['id'])->pluck('id');
         $request->validate([
-            "cart" => ["required", "array", "min:1"],
-            "cart.*" => ["integer", Rule::in($pizzaIds)]
+            'address' => ['required', 'string', 'min:1'],
+            'cart' => ['required', 'array', 'min:1'],
+            'cart.*' => ['integer', Rule::in($pizzaIds)]
         ]);
 
         if (Auth::check()) {
             Auth::user()
                 ->orders()
-                ->create([])
+                ->create(['address' => $request->address])
                 ->pizzas()
                 ->attach($request->cart);
         }
+        // send email or something else about order
         return ['status' => 'success'];
     }
 }

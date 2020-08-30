@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Pizza from "./Pizza";
+import PizzaMenu from "./PizzaMenu";
 import CartButton from "./CartButton";
 import { reducer, initialState } from "./../reducer";
 import Currency from "./Currency";
@@ -14,8 +14,8 @@ const Menu = props => {
     );
     return (
         <>
-            <div class="container">
-                <nav class="navbar navbar-light bg-light">
+            <div className="container">
+                <nav className="navbar navbar-light bg-light">
                     <Currency
                         currency={state.currency}
                         switchCurrency={() =>
@@ -24,11 +24,11 @@ const Menu = props => {
                     />
                     <CartButton count={state.cart.length} />
                 </nav>
-                <div class="row row-cols-1 row-cols-md-4">
+                <div className="row row-cols-1 row-cols-md-4">
                     {props.pizzas.map(
                         ({ id, price, name, description, image }) => (
-                            <div class="col mb-4">
-                                <Pizza
+                            <div className="col mb-4">
+                                <PizzaMenu
                                     name={name}
                                     key={id}
                                     price={

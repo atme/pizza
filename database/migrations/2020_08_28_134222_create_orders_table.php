@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->timestamps();
             $table->integer('user_id')->index();
+            $table->string('address')->required();
         });
 
         Schema::create('order_pizza', function (Blueprint $table) {
