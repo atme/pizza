@@ -19,7 +19,10 @@ class OrderController extends Controller
         return view('order', [
             'currencyRate' => 1.18,
             'deliveryCost' => 5,
-            'orders' => Auth::user()->orders()->with(['pizzas'])->get(['id']),
+            'orders' => Auth::user()
+                ->orders()
+                ->with(['pizzas'])
+                ->get(['id', 'address']),
         ]);
     }
 

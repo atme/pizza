@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Pizza from "./Pizza";
+import PizzaOrder from "./PizzaOrder";
 import { reducer, initialState } from "./../reducer";
 import Currency from "./Currency";
 import Utils from "./../utils";
@@ -23,52 +23,110 @@ const OrderList = props => {
     const deliveryCost = convertCurrency(props.deliveryCost);
 
     return (
-        <>
-            <Currency
-                currency={state.currency}
-                switchCurrency={() => dispatch({ type: "switchCurrency" })}
-            />
+        <div className="container">
+            <nav className="navbar navbar-light bg-light">
+                <Currency
+                    currency={state.currency}
+                    switchCurrency={() => dispatch({ type: "switchCurrency" })}
+                />
+            </nav>
             {orders.map(order => (
                 <Order
                     order={order}
                     deliveryCost={deliveryCost}
                     key={order.id}
+                    currency={state.currency}
                 />
             ))}
-        </>
+        </div>
     );
 };
 
 export default OrderList;
 
 const Order = props => {
-    const totalPrice = (
+    const subtotalPrice =
         props.order.pizzas.reduce(
-            (totalPrice, { price }) => totalPrice + price,
+            (totalPrice, { price }) => totalPrice + price * 100,
             0
-        ) + props.deliveryCost
-    ).toFixed(2);
+        ) / 100;
+    const totalPrice = subtotalPrice + props.deliveryCost;
+
     return (
-        <>
-            {props.order.pizzas.map(
-                ({ price, name, description, image, id }) => (
-                    <Pizza
-                        name={name}
-                        key={id}
-                        price={price}
-                        description={description}
-                        image={image}
-                        addToCart={() =>
-                            dispatch({ type: "removeFromCart", id })
-                        }
-                    />
-                )
-            )}
-            <div>Delivery cost: {props.deliveryCost}</div>
-            <div>Total price: {totalPrice}</div>
-        </>
+        <div className="row py-5 p-4 bg-white rounded shadow-sm mb-5">
+            <OrderTable>
+                {props.order.pizzas.map(
+                    ({ price, name, description, image }, index) => (
+                        <PizzaOrder
+                            name={name}
+                            key={index}
+                            price={price + props.currency}
+                            description={description}
+                            image={image}
+                            removeFromCart={() =>
+                                dispatch({
+                                    type: "removeFromCart",
+                                    index
+                                })
+                            }
+                        />
+                    )
+                )}
+            </OrderTable>
+            <div className="col-lg-6">
+                <div className="bg-light px-4 py-3 text-uppercase font-weight-bold">
+                    Order summary
+                </div>
+                <div className="p-4">
+                    <ul className="list-unstyled mb-4">
+                        <li className="d-flex justify-content-between py-3 border-bottom">
+                            <strong className="text-muted">Address</strong>
+                            <strong>{props.order.address}</strong>
+                        </li>
+                        <li className="d-flex justify-content-between py-3 border-bottom">
+                            <strong className="text-muted">
+                                Order Subtotal
+                            </strong>
+                            <strong>{subtotalPrice + props.currency}</strong>
+                        </li>
+                        <li className="d-flex justify-content-between py-3 border-bottom">
+                            <strong className="text-muted">
+                                Delivery cost:
+                            </strong>
+                            <strong>
+                                {props.deliveryCost + props.currency}
+                            </strong>
+                        </li>
+                        <li className="d-flex justify-content-between py-3 border-bottom">
+                            <strong className="text-muted">Total</strong>
+                            <h5 className="font-weight-bold">
+                                {totalPrice.toFixed(2) + props.currency}
+                            </h5>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     );
 };
+
+const OrderTable = props => (
+    <div className="table-responsive col-lg-6">
+        <table className="table">
+            <thead>
+                <tr>
+                    <th scope="col" className="border-0 bg-light">
+                        <div className="p-2 px-3 text-uppercase">Pizza</div>
+                    </th>
+                    <th scope="col" className="border-0 bg-light">
+                        <div className="py-2 text-uppercase">Price</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>{props.children}</tbody>
+        </table>
+    </div>
+);
 
 if (document.getElementById("order")) {
     const order = document.getElementById("order");
