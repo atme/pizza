@@ -14,21 +14,38 @@ const Menu = props => {
     );
     return (
         <>
-            <CartButton count={state.cart.length} />
-            <Currency
-                currency={state.currency}
-                switchCurrency={() => dispatch({ type: "switchCurrency" })}
-            />
-            {props.pizzas.map(({ id, price, name, description, image }) => (
-                <Pizza
-                    name={name}
-                    key={id}
-                    price={convertCurrency(price)}
-                    description={description}
-                    image={image}
-                    addToCart={() => dispatch({ type: "addToCart", id })}
-                />
-            ))}
+            <div class="container">
+                <nav class="navbar navbar-light bg-light">
+                    <Currency
+                        currency={state.currency}
+                        switchCurrency={() =>
+                            dispatch({ type: "switchCurrency" })
+                        }
+                    />
+                    <CartButton count={state.cart.length} />
+                </nav>
+                <div class="row row-cols-1 row-cols-md-4">
+                    {props.pizzas.map(
+                        ({ id, price, name, description, image }) => (
+                            <div class="col mb-4">
+                                <Pizza
+                                    name={name}
+                                    key={id}
+                                    price={
+                                        convertCurrency(price).toString() +
+                                        state.currency
+                                    }
+                                    description={description}
+                                    image={image}
+                                    addToCart={() =>
+                                        dispatch({ type: "addToCart", id })
+                                    }
+                                />
+                            </div>
+                        )
+                    )}
+                </div>
+            </div>
         </>
     );
 };

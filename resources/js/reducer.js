@@ -1,6 +1,6 @@
 const initialState = JSON.parse(localStorage.getItem("state")) || {
     cart: [],
-    currency: "EUR"
+    currency: "€"
 };
 
 const reducer = (state, action) => {
@@ -16,7 +16,7 @@ const reducer = (state, action) => {
                     .concat(state.cart.slice(action.index + 1))
             });
         case "switchCurrency":
-            const currency = state.currency === "EUR" ? "USD" : "EUR";
+            const currency = state.currency === "€" ? "$" : "€";
             return Object.assign({}, state, { currency });
         default:
             throw new Error();

@@ -65975,7 +65975,19 @@ __webpack_require__.r(__webpack_exports__);
 var CartButton = function CartButton(props) {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     href: "/cart"
-  }, "Cart: ", props.count));
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("svg", {
+    width: "2em",
+    height: "2em",
+    viewBox: "0 0 16 16",
+    "class": "bi bi-cart",
+    fill: "currentColor",
+    xmlns: "http://www.w3.org/2000/svg"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("path", {
+    "fill-rule": "evenodd",
+    d: "M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm7 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"
+  })), props.count > 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    "class": "badge badge-secondary"
+  }, props.count) : ""));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (CartButton);
@@ -65998,9 +66010,18 @@ __webpack_require__.r(__webpack_exports__);
 var Currency = function Currency(_ref) {
   var currency = _ref.currency,
       switchCurrency = _ref.switchCurrency;
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Currency:", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    onClick: switchCurrency
-  }, currency));
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    "class": "custom-control custom-switch"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    type: "checkbox",
+    "class": "custom-control-input",
+    id: "currency",
+    onClick: switchCurrency,
+    checked: currency === "$"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    "class": "custom-control-label",
+    "for": "currency"
+  }, "USD"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Currency);
@@ -66052,25 +66073,33 @@ var Menu = function Menu(props) {
       dispatch = _React$useReducer2[1];
 
   var convertCurrency = _utils__WEBPACK_IMPORTED_MODULE_6__["default"].currencyConverter(state.currency, props.currencyRate);
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CartButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    count: state.cart.length
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Currency__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    "class": "container"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("nav", {
+    "class": "navbar navbar-light bg-light"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Currency__WEBPACK_IMPORTED_MODULE_5__["default"], {
     currency: state.currency,
     switchCurrency: function switchCurrency() {
       return dispatch({
         type: "switchCurrency"
       });
     }
-  }), props.pizzas.map(function (_ref) {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_CartButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    count: state.cart.length
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    "class": "row row-cols-1 row-cols-md-4"
+  }, props.pizzas.map(function (_ref) {
     var id = _ref.id,
         price = _ref.price,
         name = _ref.name,
         description = _ref.description,
         image = _ref.image;
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pizza__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      "class": "col mb-4"
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pizza__WEBPACK_IMPORTED_MODULE_2__["default"], {
       name: name,
       key: id,
-      price: convertCurrency(price),
+      price: convertCurrency(price).toString() + state.currency,
       description: description,
       image: image,
       addToCart: function addToCart() {
@@ -66079,8 +66108,8 @@ var Menu = function Menu(props) {
           id: id
         });
       }
-    });
-  }));
+    }));
+  }))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (Menu);
@@ -66225,8 +66254,25 @@ __webpack_require__.r(__webpack_exports__);
 
 
 var Pizza = function Pizza(props) {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, props.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, props.price), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, props.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, props.image), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    onClick: props.addToCart
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card h-100"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+    src: props.image,
+    className: "card-img-top",
+    alt: props.name
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card-body"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
+    className: "card-title"
+  }, props.name, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+    "class": "badge badge-secondary"
+  }, props.price)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+    className: "card-text"
+  }, props.description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "card-footer"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    onClick: props.addToCart,
+    className: "btn btn-lg btn-block btn-primary"
   }, "Add to cart")));
 };
 
@@ -66259,7 +66305,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 var initialState = JSON.parse(localStorage.getItem("state")) || {
   cart: [],
-  currency: "EUR"
+  currency: "€"
 };
 
 var reducer = function reducer(state, action) {
@@ -66275,7 +66321,7 @@ var reducer = function reducer(state, action) {
       });
 
     case "switchCurrency":
-      var currency = state.currency === "EUR" ? "USD" : "EUR";
+      var currency = state.currency === "€" ? "$" : "€";
       return Object.assign({}, state, {
         currency: currency
       });
@@ -66309,7 +66355,7 @@ var localStorageReducer = saveInLocalStorage(reducer);
 __webpack_require__.r(__webpack_exports__);
 var currencyConverter = function currencyConverter(currency, rate) {
   return function (price) {
-    return currency === "EUR" ? price : Math.ceil(price * rate * 100) / 100;
+    return currency === "€" ? price : Math.ceil(price * rate * 100) / 100;
   };
 };
 
