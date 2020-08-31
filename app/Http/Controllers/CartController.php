@@ -17,8 +17,8 @@ class CartController extends Controller
     {
         return view('cart', [
             'pizzas' => Pizza::all(),
-            'currencyRate' => 1.18,
-            'deliveryCost' => 5,
+            'currencyRate' => env('CURRENCY_RATE', 1.18),
+            'deliveryCost' => env('DELIVERY_COST', 5),
             'userName' => Auth::check() ? Auth::user()->name : '',
         ]);
     }

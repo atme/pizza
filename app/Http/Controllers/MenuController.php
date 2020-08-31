@@ -16,7 +16,7 @@ class MenuController extends Controller
     {
         return view('menu', [
             'pizzas' => Pizza::all(),
-            'currencyRate' => 1.18,
+            'currencyRate' => env('CURRENCY_RATE', 1.18),
         ]);
     }
 }

@@ -17,8 +17,8 @@ class OrderController extends Controller
     public function index()
     {
         return view('order', [
-            'currencyRate' => 1.18,
-            'deliveryCost' => 5,
+            'currencyRate' => env('CURRENCY_RATE', 1.18),
+            'deliveryCost' => env('DELIVERY_COST', 5),
             'orders' => Auth::user()
                 ->orders()
                 ->with(['pizzas'])
