@@ -24,11 +24,9 @@ class CartController extends Controller
         ];
         if (Auth::check()) {
             $data['userName'] = Auth::user()->name;
-            if (Auth::user()->orders()->count() > 0) {
-                $data['userAddress'] = Auth::user()
-                    ->orders()
-                    ->latest('created_at')
-                    ->first()->address;
+            $last_order = Auth::user()->last_order;
+            if ($last_order) {
+                $data['userAddress'] = $last_order->address;
             }
         }
         return view('cart', $data);

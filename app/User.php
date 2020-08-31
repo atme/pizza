@@ -44,4 +44,14 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Order');
     }
+
+    /**
+     * Get the user's last order.
+     *
+     * @return \App\Order
+     */
+    public function getLastOrderAttribute()
+    {
+        return $this->orders()->latest()->first();
+    }
 }
