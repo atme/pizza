@@ -30,7 +30,7 @@ class OrderController extends Controller
      * Create an order.
      *
      * @param  Request  $request
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return array
      */
     public function store(Request $request)
     {
