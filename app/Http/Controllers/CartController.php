@@ -15,11 +15,22 @@ class CartController extends Controller
      */
     public function index()
     {
-        return view('cart', [
+        $data = [
             'pizzas' => Pizza::all(),
             'currencyRate' => env('CURRENCY_RATE', 1.18),
             'deliveryCost' => env('DELIVERY_COST', 5),
-            'userName' => Auth::check() ? Auth::user()->name : '',
-        ]);
+            'userName' => '',
+            'userAddress' => '',
+        ];
+        if (Auth::check()) {
+            $data['userName'] = Auth::user()->name;
+            if (Auth::user()->orders()->count() > 0) {
+                $data['userAddress'] = Auth::user()
+                    ->orders()
+                    ->latest('created_at')
+                    ->first()->address;
+            }
+        }
+        return view('cart', $data);
     }
 }

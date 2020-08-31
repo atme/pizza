@@ -65895,7 +65895,7 @@ var Cart = function Cart(props) {
       name = _React$useState2[0],
       setName = _React$useState2[1];
 
-  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_0___default.a.useState(""),
+  var _React$useState3 = react__WEBPACK_IMPORTED_MODULE_0___default.a.useState(props.userAddress),
       _React$useState4 = _slicedToArray(_React$useState3, 2),
       address = _React$useState4[0],
       setAddress = _React$useState4[1];
@@ -66074,12 +66074,14 @@ if (document.getElementById("cart")) {
       pizzas = _cart$dataset.pizzas,
       currencyRate = _cart$dataset.currencyRate,
       deliveryCost = _cart$dataset.deliveryCost,
-      userName = _cart$dataset.userName;
+      userName = _cart$dataset.userName,
+      userAddress = _cart$dataset.userAddress;
   react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Cart, {
     pizzas: JSON.parse(atob(pizzas)),
     currencyRate: parseFloat(currencyRate),
     deliveryCost: parseFloat(deliveryCost),
-    userName: atob(userName)
+    userName: atob(userName),
+    userAddress: atob(userAddress)
   }), cart);
 }
 

@@ -9,7 +9,7 @@ import Axios from "axios";
 const Cart = props => {
     const [state, dispatch] = React.useReducer(reducer, initialState);
     const [name, setName] = React.useState(props.userName);
-    const [address, setAddress] = React.useState("");
+    const [address, setAddress] = React.useState(props.userAddress);
     const [ordered, setOrdered] = React.useState(false);
     const convertCurrency = Utils.currencyConverter(
         state.currency,
@@ -177,13 +177,20 @@ export default Cart;
 
 if (document.getElementById("cart")) {
     const cart = document.getElementById("cart");
-    const { pizzas, currencyRate, deliveryCost, userName } = cart.dataset;
+    const {
+        pizzas,
+        currencyRate,
+        deliveryCost,
+        userName,
+        userAddress
+    } = cart.dataset;
     ReactDOM.render(
         <Cart
             pizzas={JSON.parse(atob(pizzas))}
             currencyRate={parseFloat(currencyRate)}
             deliveryCost={parseFloat(deliveryCost)}
             userName={atob(userName)}
+            userAddress={atob(userAddress)}
         />,
         cart
     );
