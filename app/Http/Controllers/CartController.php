@@ -17,8 +17,8 @@ class CartController extends Controller
     {
         $data = [
             'pizzas' => Pizza::all(),
-            'currencyRate' => env('CURRENCY_RATE', 1.18),
-            'deliveryCost' => env('DELIVERY_COST', 5),
+            'currencyRate' => config('app.currency_rate'),
+            'deliveryCost' => config('app.delivery_cost'),
             'userName' => '',
             'userAddress' => '',
         ];

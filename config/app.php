@@ -123,6 +123,10 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'enforce_ssl' => env('ENFORCE_SSL', false),
+    'currency_rate' => env('CURRENCY_RATE', 1.18),
+    'delivery_cost' => env('DELIVERY_COST', 5),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
