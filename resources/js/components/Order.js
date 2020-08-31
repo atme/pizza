@@ -11,15 +11,13 @@ const OrderList = props => {
         state.currency,
         props.currencyRate
     );
-    const orders = props.orders.map(order =>
-        Object.assign({}, order, {
-            pizzas: order.pizzas.map(pizza =>
-                Object.assign({}, pizza, {
-                    price: convertCurrency(pizza.price)
-                })
-            )
-        })
-    );
+    const orders = props.orders.map(order => ({
+        ...order,
+        pizzas: order.pizzas.map(pizza => ({
+            ...pizza,
+            price: convertCurrency(pizza.price)
+        }))
+    }));
     const deliveryCost = convertCurrency(props.deliveryCost);
 
     return (

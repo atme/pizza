@@ -66270,6 +66270,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./../reducer */ "./resources/js/reducer.js");
 /* harmony import */ var _Currency__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Currency */ "./resources/js/components/Currency.js");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./../utils */ "./resources/js/utils.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -66297,9 +66303,9 @@ var OrderList = function OrderList(props) {
 
   var convertCurrency = _utils__WEBPACK_IMPORTED_MODULE_5__["default"].currencyConverter(state.currency, props.currencyRate);
   var orders = props.orders.map(function (order) {
-    return Object.assign({}, order, {
+    return _objectSpread(_objectSpread({}, order), {}, {
       pizzas: order.pizzas.map(function (pizza) {
-        return Object.assign({}, pizza, {
+        return _objectSpread(_objectSpread({}, pizza), {}, {
           price: convertCurrency(pizza.price)
         });
       })
