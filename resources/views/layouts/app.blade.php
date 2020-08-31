@@ -49,9 +49,6 @@
                                 </li>
                             @endif
                         @else
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('order') }}">{{ __('Orders') }}</a>
-                            </li>
         
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -69,6 +66,10 @@
                                         @csrf
                                     </form>
                                 </div>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="btn btn-outline-primary" href="{{ route('order') }}">{{ __('Orders') }}</a>
                             </li>
                         @endguest
                     </ul>
